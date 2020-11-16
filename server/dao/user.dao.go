@@ -8,4 +8,5 @@ type UserDao interface {
 	ValidateToken(token string) error
 	Register(user *model.UsersDb) error
 	GetByUsername(username string) (model.UsersDb, error)
+	UpdateUser(user *model.UsersDb) error
 }

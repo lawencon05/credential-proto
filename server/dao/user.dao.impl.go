@@ -42,3 +42,9 @@ func (UserDaoImpl) GetByUsername(username string) (u model.UsersDb, e error) {
 	tx := g.Where("username", username).Find(&user)
 	return user, tx.Error
 }
+
+// UpdateUser for implement updateuserdao
+func (UserDaoImpl) UpdateUser(user *model.UsersDb) (e error) {
+	defer CatchError(&e)
+	return g.Save(user).Error
+}

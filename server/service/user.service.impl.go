@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-	"log"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
@@ -19,17 +18,16 @@ var userDao dao.UserDao = dao.UserDaoImpl{}
 func (UserServiceImpl) Login(user *model.UsersDb) (e error) {
 	defer CatchError(&e)
 	result, err := userDao.GetByUsername(user.Username)
-	log.Println("err1 =>", err)
 	if err == nil {
 		var err = bcrypt.CompareHashAndPassword([]byte(result.Password), []byte(user.Password))
-		log.Println("err2 =>", err)
 		if err == nil {
-			if err := userDao.Login(result); err != nil {
-				t, err := GenerateToken(user.Username)
-				if err == nil {
-					user.Token = t
-					return nil
-				}
+			t, err := GenerateToken(user.Username)
+			if err == nil {
+				result.Token = t
+				user.Token = t
+				// *result.UpdatedDate = model.Timestamp(time.Now())
+				err = userDao.UpdateUser(&result)
+				return err
 			}
 		}
 	}
