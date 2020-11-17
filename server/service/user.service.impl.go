@@ -25,7 +25,9 @@ func (UserServiceImpl) Login(user *model.UsersDb) (e error) {
 			if err == nil {
 				result.Token = t
 				user.Token = t
-				// *result.UpdatedDate = model.Timestamp(time.Now())
+
+				updateTime := model.Timestamp(time.Now())
+				result.UpdatedDate = &updateTime
 				err = userDao.UpdateUser(&result)
 				return err
 			}
